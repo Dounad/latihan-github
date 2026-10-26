@@ -1,10 +1,20 @@
 <x-layouts.app title="Data Pasien">
 
-    {{-- Header --}}
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-slate-800">
-            Data Pasien
-        </h2>
+ {{-- Header --}}
+<div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-slate-800">
+        Data Pasien
+    </h2>
+
+    {{-- Bungkus kedua tombol dalam satu div flex --}}
+    <div class="flex items-center gap-3">
+        <a href="{{ route('pasien.export') }}" class="inline-flex items-center gap-2 px-4 py-2.5
+                  bg-emerald-600 hover:bg-emerald-700
+                  text-white text-sm font-semibold
+                  rounded-xl shadow-sm transition">
+            <i class="fas fa-file-excel text-sm"></i>
+            Export Excel
+        </a>
 
         <a href="{{ route('pasien.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5
                   bg-primary hover:bg-primary/90
@@ -14,7 +24,7 @@
             Tambah Pasien
         </a>
     </div>
-
+</div>
     {{-- Card --}}
     <div class="card bg-base-100 shadow-md rounded-2 border">
         <div class="card-body p-0">

@@ -25,13 +25,14 @@
     @endif
 
     {{-- Form Card --}}
-    <div class="card bg-base-100 shadow-md rounded-2 border max-w-3xl">
+    <div class="card bg-base-100 shadow-md rounded-2xl border max-w-3xl">
         <div class="card-body p-6">
-            <form action="{{ route('periksa-pasien.store') }}" method="POST" class="space-y-5">
+            <form id="formPeriksa" action="{{ route('periksa-pasien.store') }}" method="POST" class="space-y-5">
                 @csrf
 
-                {{-- Hidden Input ID Daftar Poli --}}
+                {{-- Hidden Input ID Daftar Poli & Obat JSON --}}
                 <input type="hidden" name="id_daftar_poli" value="{{ $daftarPoli->id }}">
+                <input type="hidden" name="obat_json" id="obat_json" value="{{ old('obat_json', '[]') }}">
 
                 {{-- Nama Pasien (Read-only) --}}
                 <div class="form-control">
@@ -131,29 +132,40 @@
         </div>
     </div>
 
-    {{-- Script Hitung Biaya Otomatis Saat Checkbox Obat Dipilih --}}
+    {{-- Script Hitung Biaya Otomatis & Sinkronisasi obat_json --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const BIAYA_DOKTER = 150000;
             const inputBiaya = document.getElementById('biaya_periksa');
+            const hiddenObatJson = document.getElementById('obat_json');
             const checkboxes = document.querySelectorAll('.obat-checkbox');
+            const formPeriksa = document.getElementById('formPeriksa');
 
-            function hitungTotal() {
+            function sinkronkanObatDanBiaya() {
                 let totalObat = 0;
+                let selectedObatIds = [];
+
                 checkboxes.forEach(cb => {
                     if (cb.checked) {
                         totalObat += parseInt(cb.getAttribute('data-harga')) || 0;
+                        selectedObatIds.push(cb.value);
                     }
                 });
+
                 inputBiaya.value = BIAYA_DOKTER + totalObat;
+                hiddenObatJson.value = JSON.stringify(selectedObatIds);
             }
 
             checkboxes.forEach(cb => {
-                cb.addEventListener('change', hitungTotal);
+                cb.addEventListener('change', sinkronkanObatDanBiaya);
             });
 
-            // Jalankan sekali saat pertama load jika ada old input
-            hitungTotal();
+            formPeriksa.addEventListener('submit', function () {
+                sinkronkanObatDanBiaya();
+            });
+
+            // Inisialisasi awal saat halaman termuat
+            sinkronkanObatDanBiaya();
         });
     </script>
 </x-layouts.app>

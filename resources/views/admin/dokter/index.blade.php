@@ -6,13 +6,26 @@
             Data Dokter
         </h2>
 
-        <a href="{{ route('dokter.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5
-                  bg-primary hover:bg-primary/90
-                  text-white text-sm font-semibold
-                  rounded-xl transition">
-            <i class="fas fa-plus text-xs"></i>
-            Tambah Dokter
-        </a>
+        <div class="flex items-center gap-3">
+            {{-- Tombol Export Excel --}}
+            <a href="{{ route('dokter.export') }}" class="inline-flex items-center gap-2 px-4 py-2.5
+                      bg-emerald-600 hover:bg-emerald-700
+                      text-white text-sm font-semibold
+                      rounded-xl shadow-sm transition">
+                <i class="fas fa-file-excel text-sm"></i>
+                Export Excel
+            </a>
+
+            {{-- Tombol Tambah Dokter --}}
+            <a href="{{ route('dokter.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5
+                      bg-primary hover:bg-primary/90
+                      text-white text-sm font-semibold
+                      rounded-xl transition">
+                <i class="fas fa-plus text-xs"></i>
+                Tambah Dokter
+            </a>
+        </div>
+        
     </div>
 
     {{-- Alert Notifikasi --}}
@@ -78,9 +91,9 @@
 
                                     {{-- Edit --}}
                                     <a href="{{ route('dokter.edit', $dokter->id) }}" class="inline-flex items-center gap-1 px-4 py-2
-                                              bg-amber-500 hover:bg-amber-600
-                                              text-white text-xs font-semibold
-                                              rounded-lg transition">
+                                               bg-amber-500 hover:bg-amber-600
+                                               text-white text-xs font-semibold
+                                               rounded-lg transition">
                                         <i class="fas fa-pen text-xs"></i>
                                         Edit
                                     </a>
