@@ -13,6 +13,7 @@ class DaftarPoli extends Model
         'id_jadwal',
         'keluhan',
         'no_antrian',
+        'status', // <-- Wajib ditambahkan agar kolom status bisa di-update
     ];
 
     public function pasien()

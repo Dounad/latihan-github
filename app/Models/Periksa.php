@@ -14,6 +14,8 @@ class Periksa extends Model
         'tgl_periksa',
         'catatan',
         'biaya_periksa',
+        'bukti_pembayaran',
+        'status_pembayaran',
     ];
 
     public function daftarPoli()
@@ -22,6 +24,10 @@ class Periksa extends Model
     }
 
     public function detailPeriksa()
+    {
+        return $this->hasMany(DetailPeriksa::class, 'id_periksa');
+    }
+    public function detailPeriksas()
     {
         return $this->hasMany(DetailPeriksa::class, 'id_periksa');
     }
