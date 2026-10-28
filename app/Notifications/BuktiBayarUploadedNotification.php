@@ -27,11 +27,18 @@ class BuktiBayarUploadedNotification extends Notification
         $namaPasien = $this->periksa->daftarPoli->pasien->nama 
             ?? ($this->periksa->daftarPoli->pasien->name ?? 'Pasien');
 
+        // URL tujuan sesuai role penerima notifikasi
+        $targetUrl = match ($notifiable->role ?? null) {
+            'admin'  => route('admin.pembayaran.index'),
+            'dokter' => route('dokter.dashboard'),
+            default  => '#',
+        };
+
         return [
             'title'      => 'Bukti Pembayaran Baru',
             'message'    => "Pasien {$namaPasien} telah mengunggah bukti pembayaran.",
             'id_periksa' => $this->periksa->id,
-            'url'        => route('dokter.dashboard'),
+            'url'        => $targetUrl,
         ];
     }
 }
