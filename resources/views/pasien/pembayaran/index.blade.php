@@ -54,16 +54,12 @@
                                         <span class="text-xs text-slate-400">Belum diunggah</span>
                                     @endif
                                 </td>
-                                <td class="p-4 text-right">
-                                    @if($item->status_pembayaran != 'lunas')
-                                        <form action="{{ route('pasien.pembayaran.upload', $item->id) }}" method="POST" enctype="multipart/form-data" class="flex items-center justify-end gap-2">
-                                            @csrf
-                                            <input type="file" name="bukti_pembayaran" required class="text-xs file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
-                                            <button type="submit" class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700">Upload</button>
-                                        </form>
-                                    @else
-                                        <span class="text-xs text-emerald-600 font-semibold"><i class="fas fa-check-circle"></i> Selesai</span>
-                                    @endif
+                                <td class="px-6 py-4 text-right">
+                                    <a href="{{ route('pasien.pembayaran.show', $item->id) }}" 
+                                    class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary/90 text-white text-xs font-semibold rounded-xl shadow-sm transition">
+                                        <i class="fas fa-file-invoice-dollar text-xs"></i>
+                                        Detail Tagihan
+                                    </a>
                                 </td>
                             </tr>
                         @empty
