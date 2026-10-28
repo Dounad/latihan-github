@@ -125,7 +125,8 @@ Route::middleware(['auth', 'role:pasien'])->prefix('pasien')->group(function () 
     Route::get('/riwayat', [PoliController::class, 'riwayat'])->name('pasien.riwayat');
     Route::get('/riwayat/{id}', [PoliController::class, 'detailRiwayat'])->name('pasien.riwayat.detail');
 
-    // Pembayaran & Upload Bukti Pasien
+    // Pembayaran & Upload Bukti Pasien (CUKUP TULIS /pembayaran)
     Route::get('/pembayaran', [PembayaranController::class, 'indexPasien'])->name('pasien.pembayaran.index');
+    Route::get('/pembayaran/{id}', [PembayaranController::class, 'showPasien'])->name('pasien.pembayaran.show');
     Route::post('/pembayaran/{id}/upload', [PembayaranController::class, 'uploadBukti'])->name('pasien.pembayaran.upload');
 });

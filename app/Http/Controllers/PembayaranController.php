@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Periksa;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\BuktiBayarUploadedNotification;
@@ -11,6 +12,25 @@ use App\Notifications\PembayaranLunasNotification;
 class PembayaranController extends Controller
 {
     // ================= SISI PASIEN =================
+    public function showPasien($id)
+    {
+        $pasienId = auth()->user()->id;
+
+        // Mengambil data periksa milik pasien yang sedang login
+        $pembayaran = Periksa::with([
+            'daftarPoli.jadwalPeriksa.dokter.poli',
+            'detailPeriksa.obat'
+        ])
+        ->whereHas('daftarPoli', function ($q) use ($pasienId) {
+            $q->where('id_pasien', $pasienId);
+        })
+        ->findOrFail($id);
+
+        $biayaJasaDokter = 150000;
+
+        return view('pasien.pembayaran.show', compact('pembayaran', 'biayaJasaDokter'));
+    }
+
     public function indexPasien()
     {
         $pasienId = auth()->user()->id;
@@ -36,8 +56,11 @@ class PembayaranController extends Controller
             'bukti_pembayaran.max'      => 'Ukuran gambar maksimal 2MB.',
         ]);
 
-        // Eager load relasi ke User Dokter
-        $periksa = Periksa::with(['daftarPoli.jadwalPeriksa.dokter'])->findOrFail($id);
+        // Eager load relasi ke Dokter dan Pasien
+        $periksa = Periksa::with([
+            'daftarPoli.pasien',
+            'daftarPoli.jadwalPeriksa.dokter'
+        ])->findOrFail($id);
 
         if ($request->hasFile('bukti_pembayaran')) {
             if ($periksa->bukti_pembayaran && Storage::disk('public')->exists($periksa->bukti_pembayaran)) {
@@ -51,10 +74,16 @@ class PembayaranController extends Controller
                 'status_pembayaran' => 'menunggu_konfirmasi',
             ]);
 
-            // Kirim notifikasi ke User Dokter
+            // 1. Kirim notifikasi ke User Dokter pemeriksa
             $dokter = $periksa->daftarPoli->jadwalPeriksa->dokter ?? null;
             if ($dokter) {
                 $dokter->notify(new BuktiBayarUploadedNotification($periksa));
+            }
+
+            // 2. Kirim notifikasi ke Semua Admin
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new BuktiBayarUploadedNotification($periksa));
             }
         }
 
